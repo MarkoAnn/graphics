@@ -2,11 +2,30 @@
 #include "graphics.h"
 #pragma comment(lib,"graphics.lib")
 
-static int windowWidth; 
-static int windowHeight; 
+static int windowWidth;
+static int windowHeight;
 
 void drawSquare(int x1, int y1, int size) {
     rectangle(x1, y1, x1 + size, y1 + size);
+}
+
+void moveSquare(char key, int& x, int& y) {
+    switch (key) {
+    case 'd':
+        x++;
+        break;
+    case 's':
+        y++;
+        break;
+    case 'w':
+        y--;
+        break;
+    case 'a':
+        x--;
+        break;
+    default:
+        break;
+    }
 }
 
 int main() {
@@ -17,24 +36,13 @@ int main() {
     int x = 0;
     int y = 0;
     int size = 45;
-  
+
     while (true) {
         cleardevice();
         drawSquare(x, y, size);
         if (kbhit()) {
             char key = getch();
-            if (key == 'd') {
-                x++;
-            }
-            else if (key == 's') {
-                y++;
-            }
-            else if (key == 'w') {
-                y--;
-            }
-            else if (key == 'a') {
-                x--;
-            }
+            moveSquare(key, x, y);
         }
 
         delay(10);
