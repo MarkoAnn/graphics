@@ -2,33 +2,43 @@
 #include "graphics.h"
 #pragma comment(lib,"graphics.lib")
 
-void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-    line(x1, y1, x2, y2);
-    line(x2, y2, x3, y3);
-    line(x3, y3, x1, y1);
-}
+static int windowWidth; 
+static int windowHeight; 
 
+void drawSquare(int x1, int y1, int size) {
+    rectangle(x1, y1, x1 + size, y1 + size);
+}
 
 int main() {
     initwindow(500, 500);
-    int x1;
-    int y1;
-    int x2;
-    int y2; 
-    int x3;
-    int y3;
-    std::cout << "введите точки треугольника: ";
-    std::cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;
+    windowWidth = getmaxx();
+    windowHeight = getmaxy();
+    std::cout << "graphic window size: x=" << windowWidth << " y=" << windowHeight << std::endl;
+    int x = 0;
+    int y = 0;
+    int size = 45;
+  
+    while (true) {
+        cleardevice();
+        drawSquare(x, y, size);
+        if (kbhit()) {
+            char key = getch();
+            if (key == 'd') {
+                x++;
+            }
+            else if (key == 's') {
+                y++;
+            }
+            else if (key == 'w') {
+                y--;
+            }
+            else if (key == 'a') {
+                x--;
+            }
+        }
 
-    drawTriangle(x1, y1, x2, y2, x3, y3);
-
-
-    /*
-    delay(2000);
-    cleardevice();
-    setbkcolor(BLACK);
-    */
-
+        delay(10);
+    }
     getch();
     closegraph();
     return 0;
