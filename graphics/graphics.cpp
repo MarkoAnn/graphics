@@ -3,7 +3,6 @@
 #include <vector>
 
 #pragma comment(lib,"graphics.lib")
-
 const int WINDOW_WIDTH = 500;
 const int WINDOW_HEIGHT = 500;
 const int SQUARE_SIZE = 20;
@@ -90,7 +89,15 @@ void changeDirection(int newDirection) {
     currentDirection = newDirection;
 }
 
-
+bool checkCollisionWithOtherCapybara() {
+    Capybara& headCapybara = capybaras.front(); // Получаем ссылку на главную капибару
+    for (size_t i = 1; i < capybaras.size(); ++i) {
+        if (headCapybara.x == capybaras[i].x && headCapybara.y == capybaras[i].y) {
+            return true; // Возвращает true, если капибара врезалась в другую капибару
+        }
+    }
+    return false; // Возвращает false, если врезание не обнаружено
+}
 
 
 void drawApple(int x, int y, int size) {
@@ -103,6 +110,10 @@ void generateRandomAppleCoordinates(int size, int& appleX, int& appleY) {
     appleY = rand() % (WINDOW_HEIGHT - size); // Генерируем случайные координаты для яблока
 }
 
+void increaseEatenApplesCounter(int& eatenApples) {
+    eatenApples++; // Увеличиваем счетчик съеденных яблок
+    std::cout << "Количество съеденных яблок: " << eatenApples << std::endl; // Выводим количество съеденных яблок в консоль
+}
 bool isAppleEaten(int appleX, int appleY, int appleSize, int x, int y, int squareSize) {
     int capybaraCenterX = x + squareSize / 2;
     int capybaraCenterY = y + squareSize / 2;
@@ -157,13 +168,10 @@ int main() {
             break;
         }
 
-        bool gameOver = false;
-        for (size_t i = 1; i < capybaras.size(); ++i) {
-            if (headCapybara.x == capybaras[i].x && headCapybara.y == capybaras[i].y) {
-                std::cout << "Игра окончена! Капибара врезалась в другую капибару." << std::endl;
-                gameOver = true;
-                break;
-            }
+        bool gameOver = checkCollisionWithOtherCapybara();
+        if (gameOver) {
+            std::cout << "Игра окончена! Капибара врезалась в другую капибару." << std::endl;
+            break;
         }
 
         if (gameOver) {
@@ -172,8 +180,7 @@ int main() {
 
         if (isAppleEaten(appleX, appleY, APPLE_SIZE, capybaras.front().x, capybaras.front().y, SQUARE_SIZE)) { // Если съедено яблоко
             generateRandomAppleCoordinates(APPLE_SIZE, appleX, appleY); // Генерируем новые координаты для яблока
-            eatenApples++; // Увеличиваем счетчик съеденных яблок
-            std::cout << "Количество съеденных яблок: " << eatenApples << std::endl; // Выводим количество съеденных яблок в консоль
+            increaseEatenApplesCounter(eatenApples); // Увеличиваем счетчик съеденных яблок и выводим их количество в консоль
             addCapybara(capybaras.back().x, capybaras.back().y); // Добавляем новый элемент в вектор capybaras
         }
 
@@ -184,7 +191,8 @@ int main() {
             case 's':
             case 'w':
             case 'a':
-                currentDirection = key; // Обновляем текущее направление движения
+                currentDirection = key;// Обновляем текущее направление движения
+                changeDirection(key);
                 break;
             }
         }
