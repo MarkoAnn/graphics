@@ -14,6 +14,9 @@
     <ClCompile Include="graphics.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="CapybaraChain.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="graphics.lib">
